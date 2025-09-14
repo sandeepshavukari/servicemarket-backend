@@ -24,6 +24,7 @@ public class AdminController {
         }
     }
 
+
     // Helper class for error responses
     public static class ErrorResponse {
         private String message;

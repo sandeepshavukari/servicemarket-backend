@@ -18,12 +18,16 @@ public class Quote {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "worker_id", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password", "authorities",
+            "accountNonExpired", "accountNonLocked", "credentialsNonExpired",
+            "enabled", "username"})
     private User worker;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_request_id", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "quotes"})
+//    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "quotes"})
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "quotes", "customer"})
     private ServiceRequest serviceRequest;
 
     @Column(nullable = false, precision = 10, scale = 2)

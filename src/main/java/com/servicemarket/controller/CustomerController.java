@@ -10,6 +10,7 @@ import com.servicemarket.service.AuthService;
 import com.servicemarket.service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,23 @@ public class CustomerController {
             User customer = authService.getCurrentUser(authentication.getName());
             List<ServiceRequest> requests = customerService.getCustomerRequests(customer);
             return ResponseEntity.ok(requests);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+        }
+    }
+    @GetMapping("/requests/{requestId}")
+    public ResponseEntity<?> getRequestById(@PathVariable Long requestId, Authentication authentication) {
+        try {
+            User customer = authService.getCurrentUser(authentication.getName());
+            ServiceRequest request = customerService.getRequestById(requestId);
+
+            // Check if the request belongs to the authenticated customer
+            if (!request.getCustomer().getId().equals(customer.getId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ErrorResponse("Access denied to this request"));
+            }
+
+            return ResponseEntity.ok(request);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }

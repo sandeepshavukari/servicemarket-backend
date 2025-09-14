@@ -48,6 +48,10 @@ public class CustomerService {
     public List<Booking> getCustomerBookings(User customer) {
         return bookingRepository.findByCustomerOrderByCreatedAtDesc(customer);
     }
+    public ServiceRequest getRequestById(Long requestId) {
+        return serviceRequestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Service request not found with id: " + requestId));
+    }
 
     public Booking createBooking(BookingDto dto, User customer) {
         // Find the service request
@@ -78,7 +82,6 @@ public class CustomerService {
 
         return bookingRepository.save(booking);
     }
-
     public Booking completeBooking(Long bookingId, CompletionDto dto, User customer) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
@@ -102,4 +105,28 @@ public class CustomerService {
 
         return bookingRepository.save(booking);
     }
+
+//    public Booking completeBooking(Long bookingId, CompletionDto dto, User customer) {
+//        Booking booking = bookingRepository.findById(bookingId)
+//                .orElseThrow(() -> new RuntimeException("Booking not found"));
+//
+//        // Verify that the customer owns this booking
+//        if (!booking.getCustomer().getId().equals(customer.getId())) {
+//            throw new RuntimeException("Unauthorized access to booking");
+//        }
+//
+//        // Update booking with completion details
+//        booking.setStatus(Booking.Status.COMPLETED);
+//        booking.setPaymentAmount(dto.getPaymentAmount());
+//        booking.setFeedback(dto.getFeedback());
+//        booking.setRating(dto.getRating());
+//        booking.setCompletedAt(LocalDateTime.now());
+//
+//        // Update service request status
+//        ServiceRequest serviceRequest = booking.getServiceRequest();
+//        serviceRequest.setStatus(ServiceRequest.Status.COMPLETED);
+//        serviceRequestRepository.save(serviceRequest);
+//
+//        return bookingRepository.save(booking);
+//    }
 }

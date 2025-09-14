@@ -1,5 +1,6 @@
 package com.servicemarket.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -17,7 +18,10 @@ public class ServiceRequest {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password", "authorities",
+            "accountNonExpired", "accountNonLocked", "credentialsNonExpired",
+            "enabled", "username"})
     private User customer;
 
     @Column(nullable = false)
@@ -51,7 +55,8 @@ public class ServiceRequest {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "serviceRequest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"serviceRequest"})
+//    @JsonIgnoreProperties({"serviceRequest"})
+    @JsonIgnore
     private List<Quote> quotes = new ArrayList<>();
 
     @PrePersist
